@@ -1,5 +1,5 @@
 {
-    "name": "ionic_RESTful_APİ",
+    "name": "ionic_RESTful_API",
     "version": "0.0.1",
     "dependencies": {
         "body-parser": "^1.0.2",

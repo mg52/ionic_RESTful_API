@@ -92,7 +92,8 @@ app.get('/getUserDetails', function(req, res) {
 });
 
 app.get('/try', function(req,res){
-	res.json({'try':'OK'});"
+	res.json({'try':'OK'});
 });
+
 var server = app.listen(port);
 console.log('Working!');

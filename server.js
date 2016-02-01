@@ -83,11 +83,20 @@ app.get('/getUserDetails', function(req, res) {
 	var post = req.body;
 	User.findOne({'username': post.username}, function(err, user) {
         if (err) throw err;
-		res.json({
+        if (user && post.password == user.password) {
+        	res.json({
 			username: user.username,
 			email: user.email,
-            password: user.password
+            		password: user.password
 		});
+        }
+        else{
+        	res.json({
+        		username: '',
+			email: '',
+            		password: ''
+        	});
+        }
     });
 });
 

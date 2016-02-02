@@ -40,11 +40,13 @@ app.post('/login', function(req, res) {
         if (err) throw err;
         if (user && post.password == user.password) {
             res.json({
-                username: user.username
+                username: user.username,
+				password: user.password
             });
         } else {
             res.json({
-                username: ''
+                username: '',
+				password: ''
             });
         }
     });
@@ -79,18 +81,21 @@ app.post('/signup', function(req, res) {
     });
 });
 
-app.get('/getUserDetails', function(req, res) {
+app.post('/getUserDetails', function(req, res) {
 	var post = req.body;
 	User.findOne({'username': post.username}, function(err, user) {
         if (err) throw err;
+		console.log('username: ' + post.username + ' ' + post.password);
         if (user && post.password == user.password) {
+		console.log('2 ' + user.password);
         	res.json({
 			username: user.username,
 			email: user.email,
-            		password: user.password
+            password: user.password
 		});
         }
         else{
+		console.log(3);
         	res.json({
         		username: '',
 			email: '',

@@ -4,6 +4,8 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var app = express();
+var server = app.listen(port);
+var io = require('socket.io').listen(server);
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -109,5 +111,4 @@ app.get('/try', function(req,res){
 	res.json({'try':'OK'});
 });
 
-var server = app.listen(port);
 console.log('Working!');

@@ -8,6 +8,6 @@
         "cookie-parser": "^1.3.5",
         "mongoose": "latest",
         "cors": "latest",
-        "socket.io": "latest"
+        "socket.io": "1.0"
     }
 }

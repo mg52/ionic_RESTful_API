@@ -10,6 +10,7 @@ var io = require('socket.io').listen(server);
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(cors());
+var currentUser = '';
 /*mongodb*/
 var mongoose = require('mongoose');
 var uristring = process.env.MONGOLAB_URI || 'mongodb://localhost/mean_stack';
@@ -89,7 +90,7 @@ app.post('/getUserDetails', function(req, res) {
         if (err) throw err;
 		console.log('username: ' + post.username + ' ' + post.password);
         if (user && post.password == user.password) {
-		console.log('2 ' + user.password);
+          currentUser = user.username;
         	res.json({
 			username: user.username,
 			email: user.email,
@@ -97,7 +98,6 @@ app.post('/getUserDetails', function(req, res) {
 		});
         }
         else{
-		console.log(3);
         	res.json({
         		username: '',
 			email: '',
@@ -111,4 +111,59 @@ app.get('/try', function(req,res){
 	res.json({'try':'OK'});
 });
 
+/*Socket.IO*/
+var users = [];
+io.sockets.on('connection', function (socket) {
+	var user;
+	socket.on('sendInformation', function(data){
+		//console.log(data.socketId + ', ' + data.name);
+		user = addUser(data.socketId, data.name);
+		console.log(users);
+	});
+  socket.on('send_mouse_pos', function(data){
+    var controlBit = 0, friendId = 0;
+    for(var i=0; i<users.length; i++){
+      if(data.friendName === users[i].name){
+        console.log(users[i].name + ' ' + users[i].socketId);
+        //io.to(users[i].socketId).emit("send_draw", {drawarray: data.mouse_pos, friendName: data.friendName, currentUser: currentUser});
+          io.sockets.connected[users[i].socketId].emit('send_draw', {drawarray: data.mouse_pos, friendName: data.friendName, senderName: data.senderName});
+        break;
+      }
+    }
+
+  });
+	socket.on('disconnect', function () {
+		console.log('disconnect');
+        removeUser(user);
+    });
+});
+var addUser = function(socketId, name) {
+	var controlBit = 0;
+	for(var i=0; i<users.length; i++){
+		if(name === users[i].name){
+			controlBit = 1;
+			break;
+		}
+	}
+	if(controlBit == 0){
+		var user = {
+			name: name,
+			socketId: socketId
+		}
+		users.push(user);
+		return user;
+	}
+	else{
+		return;
+	}
+}
+var removeUser = function(user) {
+    for(var i=0; i<users.length; i++) {
+        if(user.name === users[i].name) {
+            users.splice(i, 1);
+            return;
+        }
+    }
+}
+/*Socket.IO*/
 console.log('Working!');

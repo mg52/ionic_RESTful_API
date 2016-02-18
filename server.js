@@ -130,10 +130,14 @@ io.sockets.on('connection', function (socket) {
         console.log(users[i].name + ' ' + users[i].socketId);
         //io.to(users[i].socketId).emit("send_draw", {drawarray: data.mouse_pos, friendName: data.friendName, currentUser: currentUser});
           io.sockets.connected[users[i].socketId].emit('send_draw', {drawarray: data.mouse_pos, friendName: data.friendName, senderName: data.senderName});
+          controlBit = 1;
         break;
       }
     }
-
+    if(controlBit == 0){
+		console.log('friend not found');
+		socket.emit('friendNameNotFound', {friendName: data.friendName});
+	}
   });
 	socket.on('disconnect', function () {
 		console.log('disconnect');

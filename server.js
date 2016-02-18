@@ -37,6 +37,9 @@ var User = mongoose.model('User', userSchema);
 
 app.post('/login', function(req, res) {
     var post = req.body;
+    if(post.username == '' || post.password == ''){
+    	return;
+    }
     User.findOne({
         'username': post.username
     }, function(err, user) {

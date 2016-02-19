@@ -139,6 +139,14 @@ io.sockets.on('connection', function (socket) {
 		socket.emit('friendNameNotFound', {friendName: data.friendName});
 	}
   });
+  	socket.on('message_received', function(data){
+		for(var i=0; i<users.length; i++){
+	 	if(data.senderName === users[i].name){
+          		io.sockets.connected[users[i].socketId].emit('message_sended');
+        		break;
+      		}
+    		}
+	});
 	socket.on('disconnect', function () {
 		console.log('disconnect');
         removeUser(user);

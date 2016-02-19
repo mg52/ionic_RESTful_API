@@ -143,6 +143,10 @@ io.sockets.on('connection', function (socket) {
 		console.log('disconnect');
         removeUser(user);
     });
+    	socket.on('disconnectClient', function(){
+    		removeUser(user);
+    		socket.disconnect();
+    	});
 });
 var addUser = function(socketId, name) {
 	var controlBit = 0;
